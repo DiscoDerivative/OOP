@@ -79,6 +79,33 @@ class Car{
             model = nullptr;
         }
     }
+    Car& operator=(const Car& src){
+        // check for self-assignment
+        if (this != &src)
+        {
+            // shallow copy non-resource variables
+            year = src.year;
+            // deallocate previously allocated dynamic memory
+            delete [] model;
+            delete [] make;
+            // allocate new dynamic memory, if needed
+            if(src.model != nullptr)
+            {
+                // copy the resource data
+                model = new char[std::strlen(model) + 1];
+                std::strcpy(model, src.model);
+                
+                make = new char[std::strlen(model) + 1];
+                std::strcpy(make, src.make);
+            }
+        }
+        else
+        {
+            model = nullptr;
+            make = nullptr;
+        }
+        return *this;
+    }
     ~Car(){
         delete [] make;
         delete [] model;
@@ -91,9 +118,21 @@ class Car{
 
 int main(void)
 {
+    //Copy constructor usage
     Car c1("Toyota", "Camry", 2016);
+    std::cout << "Value of car 1: ";
     c1.displayDetails();
+    std::cout << "Copying car 1 into car 2: ";
     Car c2 = c1;
     c2.displayDetails();
+    
+    //Copy assignment operator usage
+    Car c3("Audi", "A4", 2018);
+    std::cout << "Original value of car 3: ";
+    c3.displayDetails();
+    std::cout << "Car 1 being copied into car 3: ";
+    c3 = c1;
+    c3.displayDetails();
+    
     return 0;
 }
